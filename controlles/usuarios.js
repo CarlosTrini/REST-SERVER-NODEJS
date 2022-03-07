@@ -6,10 +6,17 @@ const UsuarioModel = require("../models/usuarios"); //modelo
 //*************************** GET **************************
 const usuariosGet = async(req, res = response) => {
   const {limite = 5, desde= 0} = req.query;
-  const usuarios = await UsuarioModel.find()
-  .skip(Number(desde))
-  .limit(Number(limite));
-  res.json({usuarios });
+  const queryFilter = {estado: true} //estado 'false' son aquellos que están 'eliminados' de manera lógica
+
+  // const usuariosInfo = await UsuarioModel.find(queryFilter).skip(Number(desde)).limit(Number(limite));
+  // const usuariosCount = await UsuarioModel.countDocuments(queryFilter); //solo trae con estado 'true'
+  const [usuariosInfo, usuariosCount] = await Promise.all([
+    UsuarioModel.find(queryFilter).skip(Number(desde)).limit(Number(limite)),
+    UsuarioModel.countDocuments(queryFilter)
+  ]);
+
+  res.json({total: usuariosCount, usuarios: usuariosInfo });
+
 };
 
 
@@ -43,14 +50,21 @@ const usuariosPut = async (req, res = response) => {
   res.json({ msg: "PUT CONTROLLER", usuario });
 };
 
+
 //************** *************PATCH **************************
 const usuariosPatch = (req, res = response) => {
   res.json({ msg: "PATCH FROM CONTROLLER" });
 };
 
+
 //************** D*************ELETE **************************
-const usuariosDelete = (req, res = response) => {
-  res.json({ msg: "DELETE FROM CONTROLLER" });
+const usuariosDelete = async(req, res = response) => {
+  const {id} = req.query;
+
+  const usuarioBorrado = await UsuarioModel.findOneAndUpdate(id, {estado: false}, {new: true}); //eliminado lógico
+  // const usuarioBorradoFisico = await UsuarioModel.findOneAndDelete(id, {new:true}); //eliminado fisico
+  
+  res.json({ msg: "DELETE FROM CONTROLLER", usuarioBorrado });
 };
 
 module.exports = {
