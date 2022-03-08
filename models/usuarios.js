@@ -21,7 +21,7 @@ const usuarioSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["ADMIN_ROLE", "USER_ROLE"],
+      enum: ["ADMIN_ROLE", "USER_ROLE", "VENTAS_ROLE"],
     },
     estado: {
       type: Boolean,
@@ -40,8 +40,8 @@ const usuarioSchema = new mongoose.Schema(
 //ES UNA MANERA DE EVITAR QUE AL INSERTAR UN USUARIO, NOS RETORNE SU PASSWORD Y SU VERSIÓN... 
 // ES NECESARIO USAR UNA FUNCIÓN DE DECLARACIÓN YA QUE SE HACE USO DE "THIS"
 usuarioSchema.methods.toJSON  = function() {
-  const {__v, password, ...usuario} = this.toObject(); 
-  return usuario;
+  const {__v, password, _id:uid, ...usuario} = this.toObject();
+  return {uid, ...usuario};
 }
 
 module.exports = mongoose.model.Usuario || mongoose.model("Usuario", usuarioSchema);

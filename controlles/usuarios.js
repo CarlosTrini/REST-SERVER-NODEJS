@@ -57,12 +57,15 @@ const usuariosPatch = (req, res = response) => {
 };
 
 
-//************** D*************ELETE **************************
+//************** ************DELETE **************************
 const usuariosDelete = async(req, res = response) => {
   const {id} = req.query;
+  const {uid, usuario} = req;
 
   const usuarioBorrado = await UsuarioModel.findOneAndUpdate(id, {estado: false}, {new: true}); //eliminado lógico
   // const usuarioBorradoFisico = await UsuarioModel.findOneAndDelete(id, {new:true}); //eliminado fisico
+
+  
   
   res.json({ msg: "DELETE FROM CONTROLLER", usuarioBorrado });
 };

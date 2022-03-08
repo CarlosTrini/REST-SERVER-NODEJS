@@ -3,9 +3,8 @@ const { check } = require("express-validator");
 
 const router = express.Router();
 
-const {validacionesCampos} = require("../middlewares/validacionesCampos");
 const {esRoleValido, emailExiste, usuarioExistePorId} = require('../helpers/validacionesDB');
-
+const {validacionesCampos, verificarToken, verificarRol} = require('../middlewares');
 // controllers
 const {
   usuariosGet,
@@ -44,6 +43,8 @@ router.patch("/", usuariosPatch);
 
 router.delete("/:id", 
   [
+    verificarToken,
+    verificarRol,
     check('id','No es un ID válido').isMongoId(),
     check('id').custom(usuarioExistePorId)
   ],
