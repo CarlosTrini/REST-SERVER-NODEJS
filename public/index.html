@@ -1,12 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acceso denegado</title>
-</head>
-<body>
-  <h1>ACCESO DENEGADO</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>REST SERVER NODEJS</title>
+  </head>
+  <body>
+    <h1>Google sign-in</h1>
+
+    <div
+      id="g_id_onload"
+      data-client_id="578961424559-h7162oem5ehii5c6u0r7ps51khfm6mnc.apps.googleusercontent.com"
+      data-auto_prompt="false"
+      data-callback="handleCredentialResponse"
+    ></div>
+    <div
+      class="g_id_signin"
+      data-type="standard"
+      data-size="large"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-shape="rectangular"
+      data-logo_alignment="left"
+    ></div>
+
+
+    <button
+      id="googleSignOut"
+    >Sign Out</button>
+
+
+    <script>
+       //no arrow function
+      function handleCredentialResponse(response) {
+        //google token : ID_TOKEN
+        //  console.log('id_token', response.credential);
+
+        const body = {id_token: response.credential};
+
+        fetch('http://localhost:4000/api/auth/google', {
+          method: 'POST',
+          headers: {
+            'Content-Type' : 'application/json'
+          },
+          body: JSON.stringify(body)
+        })
+          .then( res => res.json())
+          .then( resp => {
+            console.log(resp);
+            localStorage.setItem('email', resp.usuario.correo);
+          })
+          .catch(err => console.log(err))
+      }
+
+      const signOut = document.querySelector('#googleSignOut');
+      signOut.addEventListener('click', () => {
+        console.log(google.accounts.id);
+        google.accounts.id.revoke(localStorage.getItem('email'), done => {
+          localStorage.removeItem('email');
+          location.reload();
+        });
+      })
+    </script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </body>
 </html>
