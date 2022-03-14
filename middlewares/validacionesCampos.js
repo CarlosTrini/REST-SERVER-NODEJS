@@ -7,4 +7,5 @@ const validacionesCampos = (req, res, next) => {
 }
 
 
-module.exports = {validacionesCampos};
+
+module.exports = {validacionesCampos }; 

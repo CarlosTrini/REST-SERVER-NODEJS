@@ -1,7 +1,7 @@
 const { response } = require("express");
 const bcrypt = require("bcryptjs");
 
-const UsuarioModel = require("../models/usuarios"); //modelo
+const {UsuarioModel} = require("../models"); //modelo
 
 //*************************** GET **************************
 const usuariosGet = async(req, res = response) => {
