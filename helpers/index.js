@@ -3,6 +3,8 @@ const producto = require('./existeProducto');
 const crearJwt = require('./generarJwt');
 const verificarGoogle = require('./googleVerify');
 const validacionesCampos = require('./validacionesDB');
+const subirArchivo = require('./uploads');
+const coleccionesPermitidas = require('./coleccionesPermitidas');
 
 
 module.exports = {
@@ -10,5 +12,7 @@ module.exports = {
   ...producto,
   ...crearJwt,
   ...verificarGoogle,
-  ...validacionesCampos
+  ...validacionesCampos,
+  ...subirArchivo,
+  ...coleccionesPermitidas
 }
